@@ -1,22 +1,22 @@
 model_args:
-  model_name_or_path: EleutherAI/pythia-70m-deduped
-  cache_dir: /data/.cache/huggingface
+  model_name_or_path: roneneldan/TinyStories-1Layer-21M
+  # cache_dir: ~/data/.cache/huggingface
 data_args:
-  dataset_name: wikitext
-  dataset_config_name: wikitext-103-v1
+  dataset_name: roneneldan/TinyStories
+  # dataset_config_name: wikitext-103-v1
   streaming: False
 training_args:
-  run_name: train_gpt2_on_wiki
+  run_name: tinystories_1layer_attn_mlp_C10k_k8
   output_dir: output_main
   overwrite_output_dir: True
   do_train: True
   do_eval: True
-  per_device_train_batch_size: 24
+  per_device_train_batch_size: 8
   per_device_eval_batch_size: 8
   learning_rate: 5e-4
-  warmup_ratio: 0.0
-  lr_scheduler_type: constant
-  max_steps: 15000
+  warmup_ratio: 0.05
+  lr_scheduler_type: linear
+  max_steps: 100000
   logging_first_step: True
   logging_steps: 50
   evaluation_strategy: steps
@@ -25,7 +25,7 @@ training_args:
   save_total_limit: 2
   load_best_model_at_end: True
   ddp_find_unused_parameters: False
-  tf32: True
+  tf32: False
   dataloader_num_workers: 4
 
   train_model_params: True
@@ -34,14 +34,17 @@ training_args:
   codebook_weight_decay: 0.01
 
 codebook_args:
-  codebook_type: group
+  codebook_at: ["attn", "mlp"]
+  codebook_type: ["vanilla", "vanilla"]
+  num_codebooks: 1
+  # codebook_at: "attn_preproj"
+  # codebook_type: "group"
+  # num_codebooks: -1
   num_codes: 10000
-  num_codebooks: -1
   layers_to_snap: all
   similarity_metric: inner_product
-  codebook_at: attn_preproj
   loss: aeloss
-  k_codebook: 8
+  k_codebook: 100
   kmeans_init: False
   kmeans_path: /.cache/cb_volume/huggingface/kmeans_embeddings.pt
   kmeans_init_examples: 1000
@@ -53,9 +56,9 @@ codebook_args:
 
 k_scheduler_kwargs: null
 
-enable_logging: False
+enable_logging: True
 pretrained_path: null
 get_baseline: False
 tag_keys: []
 tags: []
-project: gpt2-codebook
+project: tinystories_1layer

@@ -1923,7 +1923,7 @@ class GPTNeoCodebookModel(CodebookModel):
     @property
     def attention_key(self):
         """Returns the attribute name used for attention in the model."""
-        return "attn.attention"
+        return "attn"
 
     @property
     def mlp_key(self):
