@@ -4,19 +4,22 @@ model_args:
 data_args:
   dataset_name: roneneldan/TinyStories
   # dataset_config_name: wikitext-103-v1
-  streaming: False
+  streaming: True
 training_args:
-  run_name: tinystories_1layer_attn_mlp_C10k_k8
+  run_name: tinystories_1layer_attn_mlp_C25k_k16
+  push_to_hub: True
+  hub_model_id: tinystories_1layer_attn_mlp_C25k_k16
   output_dir: output_main
   overwrite_output_dir: True
   do_train: True
   do_eval: True
-  per_device_train_batch_size: 8
-  per_device_eval_batch_size: 8
+  per_device_train_batch_size: 16
+  gradient_accumulation_steps: 6
+  per_device_eval_batch_size: 16
   learning_rate: 5e-4
   warmup_ratio: 0.05
-  lr_scheduler_type: linear
-  max_steps: 100000
+  lr_scheduler_type: constant
+  max_steps: 10000
   logging_first_step: True
   logging_steps: 50
   evaluation_strategy: steps
@@ -44,7 +47,7 @@ codebook_args:
   layers_to_snap: all
   similarity_metric: inner_product
   loss: aeloss
-  k_codebook: 100
+  k_codebook: 16
   kmeans_init: False
   kmeans_path: /.cache/cb_volume/huggingface/kmeans_embeddings.pt
   kmeans_init_examples: 1000
