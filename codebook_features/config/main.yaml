@@ -6,9 +6,9 @@ data_args:
   # dataset_config_name: wikitext-103-v1
   streaming: True
 training_args:
-  run_name: tinystories_1layer_attn_mlp_C25k_k16
+  run_name: tinystories_1layer_attn_mlp_C10k_k16
   push_to_hub: True
-  hub_model_id: tinystories_1layer_attn_mlp_C25k_k16
+  hub_model_id: tinystories_1layer_attn_mlp_C10k_k16
   output_dir: output_main
   overwrite_output_dir: True
   do_train: True
